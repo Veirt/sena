@@ -1,9 +1,7 @@
 from . import bot
 from .bard import bard_instance
 from .config import DISCORD_CHANNEL_ID, DISCORD_BOT_TOKEN
-import re
-
-MAX_MESSAGE_LEN = 2000
+from .utils import MAX_MESSAGE_LEN, split_message_to_chunks
 
 
 @bot.event
@@ -25,17 +23,14 @@ async def on_message(message):
                 await message.channel.send(f"An error happened. Error: {e}")
                 return
 
-        paragraphs = re.split(r"(?:\n\s*\n)|(?:\r\n\s*\r\n)", answer)
+        if len(answer) > MAX_MESSAGE_LEN:
+            msg_chunks = split_message_to_chunks(answer)
+            for msg in msg_chunks:
+                await message.channel.send(msg)
 
-        for paragraph in paragraphs:
-            if not paragraph.strip():
-                continue
+            return
 
-            # Truncate paragraph if exceeds max length
-            if len(paragraph) > MAX_MESSAGE_LEN:
-                paragraph = paragraph[:MAX_MESSAGE_LEN] + "..."
-
-            await message.channel.send(paragraph)
+        await message.channel.send(answer)
 
 
 bot.run(DISCORD_BOT_TOKEN)
