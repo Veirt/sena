@@ -177,4 +177,5 @@ pyrightconfig.json
 
 .env
 cookies.json
-docker-compose.dev.yml
+.git*
+README.md

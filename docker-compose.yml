@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  bot:
+    container_name: the_fool
+    environment:
+      - DISCORD_BOT_TOKEN=
+      - DISCORD_CHANNEL_ID=
+    build: .
+    volumes:
+      - type: bind
+        source: ./cookies.json
+        target: /app/cookies.json
+    restart: unless-stopped
