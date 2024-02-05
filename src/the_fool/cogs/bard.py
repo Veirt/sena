@@ -57,7 +57,10 @@ class Bard(commands.Cog):
 
         await ctx.reply(answer)
         if len(links) > 0:
-            await ctx.send("\n".join(links))
+            links = links[:3]
+            link_chunks = split_message_to_chunks("\n".join(links))
+            for link_chunk in link_chunks:
+                await ctx.send(link_chunk)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -75,4 +78,4 @@ class Bard(commands.Cog):
 
     @commands.command()
     async def bard(self, ctx, *args):
-        await self._get_bard_answer(ctx, "".join(args))
+        await self._get_bard_answer(ctx, " ".join(args))
