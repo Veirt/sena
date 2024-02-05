@@ -21,7 +21,9 @@ class Bard(commands.Cog):
             ctx = await self.bot.get_context(message)
             async with ctx.typing():
                 try:
-                    answer = bard_instance.get_answer(message.content)["content"]
+                    response = bard_instance.get_answer(message.content)
+                    links = response["links"]
+                    answer = response["content"]
                 except Exception as e:
                     await message.channel.send(f"An error happened. Error: {e}")
                     return
@@ -34,6 +36,8 @@ class Bard(commands.Cog):
                 return
 
             await message.channel.send(answer)
+            if len(links) > 0:
+                await message.channel.send("\n".join(links))
 
     @commands.command()
     async def bard(self, ctx, *args):
