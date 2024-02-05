@@ -1,6 +1,6 @@
 from discord.ext import commands
 from ..bard import bard_instance
-from ..config import DISCORD_CHANNEL_ID
+from ..config import DISCORD_BARD_CHANNEL_ID
 from ..utils import MAX_MESSAGE_LEN, split_message_to_chunks
 
 
@@ -14,10 +14,10 @@ class Bard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot and message.contents.startswith(self.bot.command_prefix):
+        if message.author.bot or message.content.startswith(self.bot.command_prefix):
             return
 
-        if message.channel.id == DISCORD_CHANNEL_ID:
+        if message.channel.id == DISCORD_BARD_CHANNEL_ID:
             ctx = await self.bot.get_context(message)
             async with ctx.typing():
                 try:
