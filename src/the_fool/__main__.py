@@ -1,11 +1,22 @@
 import os
+import sys
 from . import bot
 from .config import DISCORD_BOT_TOKEN
+import logging
+import logging.handlers
+
+
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 @bot.event
 async def on_ready():
-    print(f"Logged on as {bot.user}!")
+    logging.info(f"Logged on as {bot.user}!")
 
     cogs = list(
         filter(
@@ -18,4 +29,4 @@ async def on_ready():
         await bot.load_extension(f"the_fool.cogs.{cog[:-3]}")
 
 
-bot.run(DISCORD_BOT_TOKEN)
+bot.run(DISCORD_BOT_TOKEN, log_handler=None)
