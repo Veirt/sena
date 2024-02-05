@@ -5,6 +5,11 @@ services:
     environment:
       - DISCORD_BOT_TOKEN=
       - DISCORD_BARD_CHANNEL_ID=
+      - QBITTORRENT_HOST=
+      - QBITTORRENT_PORT=
+      - QBITTORRENT_USERNAME=
+      - QBITTORRENT_PASSWORD=
+
     build: .
     volumes:
       - type: bind
