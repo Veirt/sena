@@ -22,7 +22,7 @@ class Bard(commands.Cog):
 
     async def _get_bard_answer(self, ctx, question):
         if len(ctx.message.attachments) > 1:
-            ctx.send(
+            ctx.reply(
                 "Cannot read more than one image at a time. If you send multiple images, only the first one will be read."
             )
         attachments = list(
@@ -45,17 +45,17 @@ class Bard(commands.Cog):
                 links = response["links"]
                 answer = response["content"]
             except Exception as e:
-                await ctx.send(f"An error happened. Error: {e}")
+                await ctx.reply(f"An error happened. Error: {e}")
                 return
 
         if len(answer) > MAX_MESSAGE_LEN:
             msg_chunks = split_message_to_chunks(answer)
             for msg in msg_chunks:
-                await ctx.send(msg)
+                await ctx.reply(msg)
 
             return
 
-        await ctx.send(answer)
+        await ctx.reply(answer)
         if len(links) > 0:
             await ctx.send("\n".join(links))
 
