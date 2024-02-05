@@ -9,6 +9,7 @@ dependencies = [
     "discord.py>=2.3.2",
     "python-dotenv>=1.0.1",
     "bardapi>=0.1.39",
+    "aiohttp[speedups]>=3.9.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
@@ -23,6 +24,9 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+
+[tool.rye.scripts]
+dev = "env DEV=True rye run bot"
 
 [tool.hatch.metadata]
 allow-direct-references = true
