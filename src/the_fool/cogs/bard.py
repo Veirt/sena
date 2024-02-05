@@ -13,7 +13,6 @@ async def setup(bot):
 async def get_image(image_url):
     async with aiohttp.ClientSession() as session:
         async with session.get(image_url) as resp:
-            print(resp.status)
             return await resp.read()
 
 
@@ -38,11 +37,9 @@ class Bard(commands.Cog):
             try:
                 if len(attachments) > 0:
                     image = await get_image(attachments[0].url)
-                    print(image)
                     response = bard_instance.ask_about_image(question, image)
                 else:
                     logging.debug("Bard: Regular question")
-                    print(attachments, ctx.message.attachments)
                     response = bard_instance.get_answer(question)
 
                 links = response["links"]

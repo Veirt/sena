@@ -6,12 +6,14 @@ import logging
 import logging.handlers
 
 
+DEV = os.getenv("DEV", False)
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logging.DEBUG if DEV else logging.INFO,
     format="[%(asctime)s] [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+logging.getLogger("discord").setLevel(logging.INFO)
 
 
 @bot.event
