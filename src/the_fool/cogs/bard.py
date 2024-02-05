@@ -5,16 +5,16 @@ from ..utils import MAX_MESSAGE_LEN, split_message_to_chunks
 
 
 async def setup(bot):
-    await bot.add_cog(Gpt(bot))
+    await bot.add_cog(Bard(bot))
 
 
-class Gpt(commands.Cog):
+class Bard(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot:
+        if message.author.bot and message.contents.startswith(self.bot.command_prefix):
             return
 
         if message.channel.id == DISCORD_CHANNEL_ID:
@@ -34,3 +34,21 @@ class Gpt(commands.Cog):
                 return
 
             await message.channel.send(answer)
+
+    @commands.command()
+    async def bard(self, ctx, *args):
+        async with ctx.typing():
+            try:
+                answer = bard_instance.get_answer("".join(args))["content"]
+            except Exception as e:
+                await ctx.send(f"An error happened. Error: {e}")
+                return
+
+        if len(answer) > MAX_MESSAGE_LEN:
+            msg_chunks = split_message_to_chunks(answer)
+            for msg in msg_chunks:
+                await ctx.send(msg)
+
+            return
+
+        await ctx.send(answer)
