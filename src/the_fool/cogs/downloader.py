@@ -70,7 +70,10 @@ class Downloader(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        help="Download a torrent or a file from a URL. Usage: download <URI> [category]",
+        brief="Download a torrent or a file from a URL. Owner only.",
+    )
     @commands.is_owner()
     async def download(self, ctx, *args):
         if len(args) < 1:
