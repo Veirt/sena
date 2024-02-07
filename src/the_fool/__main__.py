@@ -29,6 +29,7 @@ async def on_ready():
 
     for cog in cogs:
         await bot.load_extension(f"the_fool.cogs.{cog[:-3]}")
+        logging.info(f"Cog {cog[:-3]} loaded successfully")
 
 
 bot.run(DISCORD_BOT_TOKEN, log_handler=None)

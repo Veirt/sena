@@ -1,3 +1,4 @@
+import g4f
 import aiohttp
 import logging
 from discord.ext import commands
@@ -7,7 +8,7 @@ from ..utils import MAX_MESSAGE_LEN, split_message_to_chunks
 
 
 async def setup(bot):
-    await bot.add_cog(Bard(bot))
+    await bot.add_cog(LLM(bot))
 
 
 async def get_image(image_url):
@@ -16,7 +17,7 @@ async def get_image(image_url):
             return await resp.read()
 
 
-class Bard(commands.Cog):
+class LLM(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -76,6 +77,58 @@ class Bard(commands.Cog):
         ctx = await self.bot.get_context(message)
         await self._get_bard_answer(ctx, message.content)
 
+
+
     @commands.command()
     async def bard(self, ctx, *args):
         await self._get_bard_answer(ctx, " ".join(args))
+
+    @commands.command()
+    async def gpt3(self, ctx, *args):
+        providers = [
+            provider.__name__
+            for provider in g4f.Provider.__providers__
+            if provider.working
+        ]
+
+        # Execute with a specific provider
+        async with ctx.typing():
+            answer = await g4f.ChatCompletion.create_async(
+                model=g4f.models.gpt_35_turbo,
+                messages=[{"role": "user", "content": " ".join(args)}],
+                providers=providers,
+            )  # type: ignore
+
+        if len(answer) > MAX_MESSAGE_LEN:
+            msg_chunks = split_message_to_chunks(answer)
+            for msg in msg_chunks:
+                await ctx.reply(msg)
+
+            return
+
+        await ctx.reply(answer)
+
+    @commands.command()
+    async def gpt4(self, ctx, *args):
+        providers = [
+            provider.__name__
+            for provider in g4f.Provider.__providers__
+            if provider.working
+        ]
+
+        # Execute with a specific provider
+        async with ctx.typing():
+            answer = await g4f.ChatCompletion.create_async(
+                model=g4f.models.gpt_4,
+                messages=[{"role": "user", "content": " ".join(args)}],
+                providers=providers,
+            )  # type: ignore
+
+        if len(answer) > MAX_MESSAGE_LEN:
+            msg_chunks = split_message_to_chunks(answer)
+            for msg in msg_chunks:
+                await ctx.reply(msg)
+
+            return
+
+        await ctx.reply(answer)

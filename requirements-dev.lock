@@ -21,6 +21,7 @@ charset-normalizer==3.3.2
 colorama==0.4.6
 discord-py==2.3.2
 frozenlist==1.4.1
+g4f==0.2.1.0
 h11==0.14.0
 h2==4.1.0
 hpack==4.0.0

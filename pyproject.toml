@@ -11,6 +11,7 @@ dependencies = [
     "bardapi>=0.1.39",
     "aiohttp[speedups]>=3.9.3",
     "qbittorrent-api>=2024.1.58",
+    "g4f>=0.2.1.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
