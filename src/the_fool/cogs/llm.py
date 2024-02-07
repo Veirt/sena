@@ -21,6 +21,16 @@ class LLM(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def _send_to_discord(self, ctx, answer):
+        if len(answer) > MAX_MESSAGE_LEN:
+            msg_chunks = split_message_to_chunks(answer)
+            for msg in msg_chunks:
+                await ctx.reply(msg)
+
+            return
+
+        await ctx.reply(answer)
+
     async def _get_bard_answer(self, ctx, question):
         if len(ctx.message.attachments) > 1:
             ctx.reply(
@@ -49,14 +59,7 @@ class LLM(commands.Cog):
                 await ctx.reply(f"An error happened. Error: {e}")
                 return
 
-        if len(answer) > MAX_MESSAGE_LEN:
-            msg_chunks = split_message_to_chunks(answer)
-            for msg in msg_chunks:
-                await ctx.reply(msg)
-
-            return
-
-        await ctx.reply(answer)
+        await self._send_to_discord(ctx, answer)
         if len(links) > 0:
             links = links[:3]
             link_chunks = split_message_to_chunks("\n".join(links))
@@ -77,13 +80,14 @@ class LLM(commands.Cog):
         ctx = await self.bot.get_context(message)
         await self._get_bard_answer(ctx, message.content)
 
-
-
-    @commands.command()
+    @commands.command(
+        help="Ask Bard a question. Supports asking questions about images.",
+        brief="Ask Bard a question.",
+    )
     async def bard(self, ctx, *args):
         await self._get_bard_answer(ctx, " ".join(args))
 
-    @commands.command()
+    @commands.command(help="Ask GPT-3 a question.", brief="Ask GPT-3 a question.")
     async def gpt3(self, ctx, *args):
         providers = [
             provider.__name__
@@ -99,22 +103,15 @@ class LLM(commands.Cog):
                 providers=providers,
             )  # type: ignore
 
-        if len(answer) > MAX_MESSAGE_LEN:
-            msg_chunks = split_message_to_chunks(answer)
-            for msg in msg_chunks:
-                await ctx.reply(msg)
+        await self._send_to_discord(ctx, answer)
 
-            return
-
-        await ctx.reply(answer)
-
-    @commands.command()
+    @commands.command(
+        help="Ask GPT-4 a question. May not work all the time.",
+        brief="Ask GPT-4 a question.",
+    )
     async def gpt4(self, ctx, *args):
-        providers = [
-            provider.__name__
-            for provider in g4f.Provider.__providers__
-            if provider.working
-        ]
+        providers = ["GptChatly", "Raycast", "Liaobots"]
+        logging.debug(providers)
 
         # Execute with a specific provider
         async with ctx.typing():
@@ -124,11 +121,14 @@ class LLM(commands.Cog):
                 providers=providers,
             )  # type: ignore
 
-        if len(answer) > MAX_MESSAGE_LEN:
-            msg_chunks = split_message_to_chunks(answer)
-            for msg in msg_chunks:
-                await ctx.reply(msg)
+            await self._send_to_discord(ctx, answer)
 
-            return
+    @commands.command()
+    async def llama2(self, ctx, *args):
+        async with ctx.typing():
+            answer = await g4f.ChatCompletion.create_async(
+                model=g4f.models.llama2_7b,
+                messages=[{"role": "user", "content": " ".join(args)}],
+            )  # type: ignore
 
-        await ctx.reply(answer)
+            await self._send_to_discord(ctx, answer)
