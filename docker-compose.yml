@@ -9,7 +9,9 @@ services:
       - QBITTORRENT_PORT=
       - QBITTORRENT_USERNAME=
       - QBITTORRENT_PASSWORD=
-
+      - ARIA2_HOST=
+      - ARIA2_PORT=
+      - ARIA2_SECRET=
     build: .
     volumes:
       - type: bind

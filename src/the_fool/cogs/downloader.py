@@ -1,8 +1,12 @@
 import logging
+import aria2p
+import qbittorrentapi
 from discord.ext import commands
 from enum import Enum
-import qbittorrentapi
 from ..config import (
+    ARIA2_HOST,
+    ARIA2_PORT,
+    ARIA2_SECRET,
     QBITTORRENT_HOST,
     QBITTORRENT_PORT,
     QBITTORRENT_USERNAME,
@@ -26,6 +30,20 @@ except Exception as e:
     logging.warning(
         "Failed to connect to qBittorrent. Torrent download is not available."
     )
+    logging.error(e)
+
+try:
+    if not ARIA2_HOST or not ARIA2_PORT or not ARIA2_SECRET:
+        raise ValueError("Aria2 connection info is not set")
+
+    aria2 = aria2p.API(
+        aria2p.Client(host=ARIA2_HOST, port=int(ARIA2_PORT), secret=ARIA2_SECRET)
+    )
+    aria2.get_downloads()
+except Exception as e:
+    aria2 = None
+    logging.warning("Failed to connect to aria2. HTTP download is not available.")
+    logging.error(e)
 
 
 class SupportedDownloadType(Enum):
@@ -49,7 +67,8 @@ class DownloadHandler:
             raise ValueError("Unsupported download type")
 
     def _download_http(self):
-        pass
+        assert aria2
+        aria2.add(self.uri)
 
     def _download_torrent(self):
         assert qb
@@ -102,10 +121,6 @@ class Downloader(commands.Cog):
                     f"Category doesn't exist.\nAvailable: {', '.join(available_categories)}"
                 )
                 return
-
-        if downloader.type == SupportedDownloadType.HTTP:
-            await ctx.reply("TODO. implement later.")
-            return
 
         downloader.download()
         await ctx.reply("Download has started")
