@@ -4,7 +4,7 @@ services:
     container_name: the_fool
     environment:
       - DISCORD_BOT_TOKEN=
-      - DISCORD_BARD_CHANNEL_ID=
+      - DISCORD_GEMINI_CHANNEL_ID=
       - QBITTORRENT_HOST=
       - QBITTORRENT_PORT=
       - QBITTORRENT_USERNAME=

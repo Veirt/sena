@@ -1,6 +1,6 @@
 import requests
 import json
-from bardapi import BardCookies
+from bardapi import Bard
 
 cookie_dict = {}
 
@@ -11,5 +11,4 @@ with open("./cookies.json") as f:
         cookie_dict[cookie["name"]] = cookie["value"]
         session.cookies.set(cookie["name"], cookie["value"])
 
-
-bard_instance = BardCookies(cookie_dict=cookie_dict)
+bard_instance = Bard(cookie_dict=cookie_dict)
