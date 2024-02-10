@@ -182,7 +182,7 @@ class LLM(commands.Cog):
 
             await self._send_to_discord(ctx, answer)
 
-    @commands.command()
+    @commands.command(help="Ask llama2 a question.", brief="Ask llama2 a question.")
     async def llama2(self, ctx, *args):
         async with ctx.typing():
             answer = await g4f.ChatCompletion.create_async(
