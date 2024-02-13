@@ -135,19 +135,26 @@ class LLM(commands.Cog):
             logging.error(e)
             await self._get_gemini_answer_g4f(ctx, message.content)
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.reply(f"Please provide the missing argument: {error.param.name}")
+        else:
+            await ctx.send("An error occurred.")
+            logging.error(error)
+
     @commands.command(
         help="Ask Gemini a question. Supports asking questions about images.",
         brief="Ask Gemini a question.",
     )
-    async def gemini(self, ctx, *args):
-        question = " ".join(args)
+    async def gemini(self, ctx, *, question):
         try:
             await self._get_gemini_answer_bardapi(ctx, question)
         except Exception:
             await self._get_gemini_answer_g4f(ctx, question)
 
     @commands.command(help="Ask GPT-3 a question.", brief="Ask GPT-3 a question.")
-    async def gpt3(self, ctx, *args):
+    async def gpt3(self, ctx, *, question):
         providers = [
             provider.__name__
             for provider in g4f.Provider.__providers__
@@ -158,7 +165,7 @@ class LLM(commands.Cog):
         async with ctx.typing():
             answer = await g4f.ChatCompletion.create_async(
                 model=g4f.models.gpt_35_turbo,
-                messages=[{"role": "user", "content": " ".join(args)}],
+                messages=[{"role": "user", "content": question}],
                 providers=providers,
             )  # type: ignore
 
@@ -168,7 +175,7 @@ class LLM(commands.Cog):
         help="Ask GPT-4 a question. May not work all the time.",
         brief="Ask GPT-4 a question.",
     )
-    async def gpt4(self, ctx, *args):
+    async def gpt4(self, ctx, *, question):
         providers = ["GptChatly", "Raycast", "Liaobots"]
         logging.debug(providers)
 
@@ -176,18 +183,18 @@ class LLM(commands.Cog):
         async with ctx.typing():
             answer = await g4f.ChatCompletion.create_async(
                 model=g4f.models.gpt_4,
-                messages=[{"role": "user", "content": " ".join(args)}],
+                messages=[{"role": "user", "content": question}],
                 providers=providers,
             )  # type: ignore
 
             await self._send_to_discord(ctx, answer)
 
     @commands.command(help="Ask llama2 a question.", brief="Ask llama2 a question.")
-    async def llama2(self, ctx, *args):
+    async def llama2(self, ctx, *, question):
         async with ctx.typing():
             answer = await g4f.ChatCompletion.create_async(
                 model=g4f.models.llama2_7b,
-                messages=[{"role": "user", "content": " ".join(args)}],
+                messages=[{"role": "user", "content": question}],
             )  # type: ignore
 
             await self._send_to_discord(ctx, answer)
