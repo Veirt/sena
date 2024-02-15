@@ -140,7 +140,6 @@ class LLM(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply(f"Please provide the missing argument: {error.param.name}")
         else:
-            await ctx.send("An error occurred.")
             logging.error(error)
 
     @commands.command(
@@ -176,8 +175,11 @@ class LLM(commands.Cog):
         brief="Ask GPT-4 a question.",
     )
     async def gpt4(self, ctx, *, question):
-        providers = ["GptChatly", "Raycast", "Liaobots"]
-        logging.debug(providers)
+        providers = [
+            provider.__name__
+            for provider in g4f.Provider.__providers__
+            if provider.working
+        ]
 
         # Execute with a specific provider
         async with ctx.typing():
