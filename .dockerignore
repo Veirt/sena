@@ -1,7 +1,3 @@
-# Exclude the Go module cache
-go.sum
-go.mod
-
 # Exclude binary outputs and build artifacts
 bin/
 *.exe
