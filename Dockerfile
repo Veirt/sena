@@ -1,14 +1,16 @@
-FROM python:3.12-alpine
+FROM golang:1.22-alpine AS build
 
 WORKDIR /app
-COPY ./requirements.lock .
 
-RUN apk add --no-cache git
-
-# https://github.com/mitsuhiko/rye/discussions/239
-RUN sed '/-e/d' requirements.lock > requirements.txt && pip install --no-cache-dir -r requirements.txt
+COPY go.mod go.sum ./
+RUN go mod download all
 
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o the-fool
 
-ENV PYTHONPATH "/app/src"
-CMD ["python", "-m", "the_fool"]
+FROM scratch
+WORKDIR /
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /app/the-fool the-fool
+
+CMD [ "/the-fool" ]
