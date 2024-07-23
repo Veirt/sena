@@ -28,8 +28,8 @@ func main() {
 
 		commands := commands.GetCommands()
 
-		for name, cmd := range commands {
-			if PREFIX+name == m.Content {
+		for _, cmd := range commands {
+			if strings.HasPrefix(m.Content, PREFIX+cmd.Name) {
 				cmd.Run(s, m)
 			}
 		}
