@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"strings"
+
 	"github.com/veirt/the-fool/types"
 )
 
@@ -12,4 +14,8 @@ func RegisterCommand(cmd types.Command) {
 
 func GetCommands() map[string]types.Command {
 	return cmdMap
+}
+
+func GetArguments(text string) string {
+	return strings.Join((strings.Split(text, " ")[1:]), " ")
 }
