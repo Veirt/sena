@@ -5,7 +5,7 @@ import (
 	"github.com/veirt/the-fool/types"
 )
 
-var Ping = types.Command{
+var ping = types.Command{
 	Name:        "ping",
 	Category:    "utility",
 	Description: "Check if bot is online or not",
@@ -15,5 +15,5 @@ var Ping = types.Command{
 }
 
 func init() {
-	RegisterCommand(Ping)
+	RegisterCommand(ping)
 }
