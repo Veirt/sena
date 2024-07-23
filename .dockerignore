@@ -1,1 +1,39 @@
+# Exclude the Go module cache
+go.sum
+go.mod
+
+# Exclude binary outputs and build artifacts
+bin/
+*.exe
+*.out
+*.test
+
+# Exclude IDE and editor configurations
+.vscode/
+.idea/
+*.swp
+
+# Exclude local environment configuration
 .env
+*.env
+
+# Exclude version control directories
+.git/
+.gitignore
+
+# Exclude temporary files and directories
+tmp/
+*.tmp
+*.log
+*.bak
+*.swp
+
+# Exclude Docker-related files
+Dockerfile
+docker-compose*.yml
+
+# Exclude test and build directories if they are not needed for production
+test/
+build/
+
+the-fool
