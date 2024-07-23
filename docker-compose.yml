@@ -4,8 +4,5 @@ services:
     environment:
       - DISCORD_BOT_TOKEN=
       - QBITTORRENT_HOST=
-      - ARIA2_HOST=
-      - ARIA2_PORT=
-      - ARIA2_SECRET=
     build: .
     restart: unless-stopped
