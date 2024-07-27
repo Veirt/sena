@@ -2,7 +2,7 @@ package commands
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/veirt/the-fool/types"
+	"github.com/veirt/sena/types"
 )
 
 var ping = types.Command{

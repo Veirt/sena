@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/veirt/the-fool/types"
+	"github.com/veirt/sena/types"
 )
 
 type QBittorrent struct {

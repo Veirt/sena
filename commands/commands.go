@@ -3,7 +3,7 @@ package commands
 import (
 	"strings"
 
-	"github.com/veirt/the-fool/types"
+	"github.com/veirt/sena/types"
 )
 
 var cmdMap = make(map[string]types.Command)

@@ -1,4 +1,4 @@
-module github.com/veirt/the-fool
+module github.com/veirt/sena
 
 go 1.22.5
 

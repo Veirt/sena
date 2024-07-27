@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/veirt/the-fool/commands"
+	"github.com/veirt/sena/commands"
 
 	_ "github.com/joho/godotenv/autoload"
 )
