@@ -8,11 +8,14 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/veirt/sena/commands"
+	"github.com/veirt/sena/handlers"
 
 	_ "github.com/joho/godotenv/autoload"
 )
 
 const PREFIX = "."
+
+var botId = os.Getenv("DISCORD_BOT_ID")
 
 func main() {
 	token := os.Getenv("DISCORD_BOT_TOKEN")
@@ -22,6 +25,15 @@ func main() {
 	}
 
 	s.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		if m.Author.ID == botId {
+			return
+		}
+
+		if m.ChannelID == handlers.MistralChannelId {
+			handlers.HandleMistralMessage(s, m)
+			return
+		}
+
 		if !strings.HasPrefix(m.Content, PREFIX) {
 			return
 		}
@@ -42,7 +54,7 @@ func main() {
 	defer s.Close()
 
 	// Run until code is terminated
-	log.Println("The Fool is online!")
+	log.Println("Sena is online!")
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
