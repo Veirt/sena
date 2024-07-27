@@ -15,8 +15,6 @@ import (
 
 const PREFIX = "."
 
-var botId = os.Getenv("DISCORD_BOT_ID")
-
 func main() {
 	token := os.Getenv("DISCORD_BOT_TOKEN")
 	s, err := discordgo.New("Bot " + token)
@@ -25,7 +23,7 @@ func main() {
 	}
 
 	s.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if m.Author.ID == botId {
+		if m.Author.ID == s.State.User.ID {
 			return
 		}
 
